@@ -1,0 +1,85 @@
+﻿@using PustokMVC.ViewModels.ProductVM;
+@{
+    ViewData["Title"] = "Updatte Product";
+}
+@model ProductUpdateVM
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">@ViewData["Title"] </h6>
+    </div>
+    <div class="card-body">
+        <form action="" method="post">
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExTax"></label>
+                <input asp-for="ExTax" class="form-control">
+                <span asp-validation-for="ExTax" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Brand"></label>
+                <input asp-for="Brand" class="form-control">
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RewardPoints"></label>
+                <input asp-for="RewardPoints" class="form-control">
+                <span asp-validation-for="RewardPoints" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ActualPrice"></label>
+                <input asp-for="ActualPrice" class="form-control">
+                <span asp-validation-for="ActualPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SellPrice"></label>
+                <input asp-for="SellPrice" class="form-control">
+                <span asp-validation-for="SellPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount"></label>
+                <input asp-for="Discount" class="form-control">
+                <span asp-validation-for="Discount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="About"></label>
+                <textarea asp-for="About" class="form-control"></textarea>
+                <span asp-validation-for="About" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity"></label>
+                <input asp-for="Quantity" class="form-control">
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUrl"></label>
+                <input asp-for="ImageUrl" class="form-control">
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="no">Not Available</label>
+                <input asp-for="IsAvailable" value="false" id="no" type="radio">
+                <label for="yes">Available</label>
+                <input asp-for="IsAvailable" value="true" id="yes" type="radio">
+                <span asp-validation-for="IsAvailable" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId">Categories</label>
+                <select class="form-control" asp-for="CategoryId" asp-items='@new SelectList(ViewBag.Categories, "Id" , "Name")'>
+                    <option disabled selected>Select category</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <button class="btn btn-success">Create</button>
+        </form>
+    </div>
+</div>
