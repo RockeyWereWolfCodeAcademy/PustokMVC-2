@@ -132,7 +132,7 @@
                                 <tr class='@(category.IsDeleted ? "bg-danger text-white" : "")'>
                                     <td>@category.Id</td>
                                     <td>@category.Name</td>
-                                    <td>@category.ParentCategory?.Name</td>
+                                    <td>@Model.Categories.ToList().Find(x => x.Id == category.ParentCategoryId)?.Name</td>
                                     <td><a class="btn btn-outline-info" asp-action="UpdateCategory" asp-route-id="@category.Id">Update</a></td>
                                     <td><a class="btn btn-outline-danger" asp-action="DeleteCategory" asp-route-id="@category.Id">Delete</a></td>
                                 </tr>

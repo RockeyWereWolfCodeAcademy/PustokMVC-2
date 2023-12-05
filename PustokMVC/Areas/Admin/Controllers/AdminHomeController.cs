@@ -44,7 +44,6 @@ namespace PustokMVC.Areas.Admin.Controllers
                 SellPrice = product.SellPrice,
                 Discount = product.Discount,
                 Quantity = product.Quantity,
-                ActiveImageUrl = "",
                 Images = product.Images,
                 Category = product.Category,
                 IsDeleted = product.IsDeleted,
@@ -54,7 +53,7 @@ namespace PustokMVC.Areas.Admin.Controllers
                 Id=category.Id,
                 Name = category.Name,
                 IsDeleted = category.IsDeleted,
-                ParentCategory = category.ParentCategory,
+                ParentCategoryId = category.ParentCategoryId,
             }).ToListAsync();
             return View(models);
         }

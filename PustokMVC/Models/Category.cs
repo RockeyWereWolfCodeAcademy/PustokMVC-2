@@ -9,7 +9,7 @@ namespace PustokMVC.Models
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
         public int ParentCategoryId { get; set; }
-        public Category ParentCategory { get; set; }
+        public IEnumerable<Category>? ChildCategories { get; set; }
         public IEnumerable<Product>? Products { get; set; }
     }
 }

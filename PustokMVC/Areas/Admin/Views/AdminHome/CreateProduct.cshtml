@@ -60,14 +60,6 @@
                 <input asp-for="Quantity" class="form-control">
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
-            @foreach (var image in Model.Images)
-            {
-                <div class="form-group">
-                    <label asp-for="@image.ImagePath"></label>
-                    <input asp-for="@image.ImagePath" class="form-control">
-                    <span asp-validation-for="@image.ImagePath" class="text-danger"></span>
-                </div>
-            }
             <div class="form-group">
                 <label for="no">Not Available</label>
                 <input asp-for="IsAvailable" value="false" id="no" type="radio">
