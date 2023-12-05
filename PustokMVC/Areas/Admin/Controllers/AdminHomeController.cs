@@ -44,7 +44,8 @@ namespace PustokMVC.Areas.Admin.Controllers
                 SellPrice = product.SellPrice,
                 Discount = product.Discount,
                 Quantity = product.Quantity,
-                ImageUrl = product.ImageUrl,
+                ActiveImageUrl = "",
+                Images = product.Images,
                 Category = product.Category,
                 IsDeleted = product.IsDeleted,
             }).ToListAsync();
@@ -52,6 +53,8 @@ namespace PustokMVC.Areas.Admin.Controllers
             {
                 Id=category.Id,
                 Name = category.Name,
+                IsDeleted = category.IsDeleted,
+                ParentCategory = category.ParentCategory,
             }).ToListAsync();
             return View(models);
         }
@@ -128,6 +131,7 @@ namespace PustokMVC.Areas.Admin.Controllers
         //Category Actions
         public async Task<IActionResult> CreateCategory()
         {
+            ViewBag.Categories = _context.Categories;
             return View();
         }
         [HttpPost]
@@ -138,9 +142,15 @@ namespace PustokMVC.Areas.Admin.Controllers
             {
                 return View(categoryVM);
             }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = _context.Categories;
+                return View(categoryVM);
+            }
             Category category = new Category
             {
                 Name = categoryVM.Name,
+                ParentCategoryId = categoryVM.ParentCategoryId,
             };
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
@@ -154,7 +164,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             if (id == null) return BadRequest();
             var data = await _context.Categories.FindAsync(id);
             if (data == null) return NotFound();
-            _context.Categories.Remove(data);
+            data.IsDeleted = true;
             await _context.SaveChangesAsync();
             TempData["Response"] = "deleted";
             return RedirectToAction(nameof(Index));
@@ -162,12 +172,14 @@ namespace PustokMVC.Areas.Admin.Controllers
 
         public async Task<IActionResult> UpdateCategory(int? id)
         {
+            ViewBag.Categories = _context.Categories;
             if (id == null || id <= 0) return BadRequest();
             var data = await _context.Categories.FindAsync(id);
             if (data == null) return NotFound();
             return View(new CategoryUpdateVM
             {
-                Name = data.Name
+                Name = data.Name,
+                ParentCategoryId = data.ParentCategoryId,
             });
         }
         [HttpPost]
@@ -176,11 +188,13 @@ namespace PustokMVC.Areas.Admin.Controllers
             TempData["Response"] = "temp";
             if (!ModelState.IsValid)
             {
+                ViewBag.Categories = _context.Categories;
                 return View(categoryVM);
             }
             var data = await _context.Categories.FindAsync(id);
             if (data == null) return NotFound();
             data.Name = categoryVM.Name;
+            data.ParentCategoryId = categoryVM.ParentCategoryId;
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";
             return RedirectToAction(nameof(Index));
@@ -227,7 +241,7 @@ namespace PustokMVC.Areas.Admin.Controllers
                 About = productVM.About,
                 Description = productVM.Description,
                 Quantity = productVM.Quantity,
-                ImageUrl = productVM.ImageUrl,
+                Images = productVM.Images,
                 CategoryId = productVM.CategoryId,
             };
             await _context.Products.AddAsync(product);
@@ -242,7 +256,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             if (id == null) return BadRequest();
             var data = await _context.Products.FindAsync(id);
             if (data == null) return NotFound();
-            _context.Products.Remove(data);
+            data.IsDeleted = true;
             await _context.SaveChangesAsync();
             TempData["Response"] = "deleted";
             return RedirectToAction(nameof(Index));
@@ -267,7 +281,7 @@ namespace PustokMVC.Areas.Admin.Controllers
                 About = data.About,
                 Description = data.Description,
                 Quantity = data.Quantity,
-                ImageUrl = data.ImageUrl,
+                Images = data.Images,
                 CategoryId = data.CategoryId,
             });
         }
@@ -307,7 +321,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             data.About = productVM.About;
             data.Description = productVM.Description;
             data.Quantity = productVM.Quantity;
-            data.ImageUrl = productVM.ImageUrl;
+            data.Images = productVM.Images;
             data.CategoryId = productVM.CategoryId;
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";

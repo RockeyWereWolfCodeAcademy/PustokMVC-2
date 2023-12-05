@@ -120,6 +120,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
+                            <th>Parent Category</th>
                             <th colspan="2" style="text-align: center">Action</th>
                         </tr>
                     </thead>
@@ -128,9 +129,10 @@
                         {
                             @foreach (var category in Model.Categories)
                             {
-                                <tr>
+                                <tr class='@(category.IsDeleted ? "bg-danger text-white" : "")'>
                                     <td>@category.Id</td>
                                     <td>@category.Name</td>
+                                    <td>@category.ParentCategory?.Name</td>
                                     <td><a class="btn btn-outline-info" asp-action="UpdateCategory" asp-route-id="@category.Id">Update</a></td>
                                     <td><a class="btn btn-outline-danger" asp-action="DeleteCategory" asp-route-id="@category.Id">Delete</a></td>
                                 </tr>
@@ -166,7 +168,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
-                            <th>Image</th>
+                            <th>Active Image</th>
                             <th>About</th>
                             <th>ExTax</th>
                             <th>Brand</th>
@@ -185,10 +187,15 @@
                         {
                             @foreach (var product in Model.Products)
                             {
+                                foreach (var image in product.Images)
+                                {
+                                    if (image.IsActive)
+                                        product.ActiveImageUrl = image.ImagePath;
+                                }
                                 <tr class='@(product.IsDeleted ? "bg-danger text-white" : "")'>
                                     <td>@product.Id</td>
                                     <td>@product.Name</td>
-                                    <td><img src="@product.ImageUrl" width="250px" height="250px" /></td>
+                                    <td><img src="@product.ActiveImageUrl" width="250px" height="250px" /></td>
                                     <td>@product.About</td>
                                     <td>@product.ExTax</td>
                                     <td>@product.Brand</td>

@@ -16,7 +16,8 @@ namespace PustokMVC.Areas.Admin.ViewModels
         public decimal SellPrice { get; set; }
         public float Discount { get; set; }
         public uint Quantity { get; set; }
-        public string ImageUrl { get; set; }
+        public string ActiveImageUrl { get; set; }
+        public List<ProductImage> Images { get; set; }
         public Category? Category { get; set; }
         public bool IsDeleted { get; set; } = false;
     }

@@ -36,7 +36,7 @@ namespace PustokMVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("PustokMVC.Models.Product", b =>
@@ -102,7 +102,7 @@ namespace PustokMVC.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("PustokMVC.Models.Slider", b =>
@@ -136,7 +136,7 @@ namespace PustokMVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("PustokMVC.Models.Product", b =>
