@@ -16,7 +16,7 @@
     <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="~/admin/js/demo/datatables-demo.js"></script>
+    @* <script src="~/admin/js/demo/datatables-demo.js"></script> *@
     @if (TempData["Response"] != null)
     {
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -73,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Sliders != null)
+                        @if (Model.Sliders.Count() != 0)
                         {
                             @foreach (var slider in Model.Sliders)
                             {
@@ -125,7 +125,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Categories != null)
+                        @if (Model.Categories.Count() != 0)
                         {
                             @foreach (var category in Model.Categories)
                             {
@@ -183,7 +183,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Products != null)
+                        @if (Model.Products.Count() != 0)
                         {
                             @foreach (var product in Model.Products)
                             {
@@ -223,6 +223,7 @@
         </div>
     </div>
 </div>
+
 
 
 
