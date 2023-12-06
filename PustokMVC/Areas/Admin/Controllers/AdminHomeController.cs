@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using PustokMVC.Areas.Admin.ViewModels.AdminAuthorVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminBlogVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminHomeVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminProductImageVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminProductVM;
 using PustokMVC.Contexts;
+using PustokMVC.Helpers;
 using PustokMVC.Models;
 using PustokMVC.ViewModels.AuthorVM;
 using PustokMVC.ViewModels.CategoryVM;
@@ -235,19 +238,13 @@ namespace PustokMVC.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("ActualPrice", "Sell price must be bigger than cost price");
             }
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categories = _context.Categories;
-                return View(productVM);
-            }
             if (!await _context.Categories.AnyAsync(c => c.Id == productVM.CategoryId))
             {
                 ModelState.AddModelError("CategoryId", "Category doesnt exist");
-                ViewBag.Categories = _context.Categories;
-                return View(productVM);
             }
             if (!ModelState.IsValid)
             {
+                ViewBag.Categories = _context.Categories;
                 return View(productVM);
             }
             Product product = new Product
@@ -319,14 +316,12 @@ namespace PustokMVC.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("ActualPrice", "Sell price must be bigger than cost price");
             }
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categories = _context.Categories;
-                return View(productVM);
-            }
             if (!await _context.Categories.AnyAsync(c => c.Id == productVM.CategoryId))
             {
                 ModelState.AddModelError("CategoryId", "Category doesnt exist");
+            }
+            if (!ModelState.IsValid)
+            {
                 ViewBag.Categories = _context.Categories;
                 return View(productVM);
             }
@@ -345,6 +340,226 @@ namespace PustokMVC.Areas.Admin.Controllers
             data.Quantity = productVM.Quantity;
             data.Images = productVM.Images;
             data.CategoryId = productVM.CategoryId;
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "updated";
+            return RedirectToAction(nameof(Index));
+        }
+        //author actions
+        public async Task<IActionResult> CreateAuthor()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateAuthor(AdminAuthorCreateVM authorVM)
+        {
+            TempData["Response"] = "temp";
+            if (!ModelState.IsValid)
+            {
+                return View(authorVM);
+            }
+            Author author = new Author
+            {
+                Name = authorVM.Name,
+                Surname = authorVM.Surname,
+            };
+            await _context.AddAsync(author);
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "created";
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> DeleteAuthor(int? id)
+        {
+            TempData["Response"] = "temp";
+            if (id == null) return BadRequest();
+            var data = await _context.Authors.FindAsync(id);
+            if (data == null) return NotFound();
+            _context.Remove(data);
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "temp";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> UpdateAuthor(int? id)
+        {
+            if (id == null) return BadRequest();
+            var data = await _context.Authors.FindAsync(id);
+            if (data == null) return NotFound();
+            return View(new AdminAuthorUpdateVM
+            {
+                Name = data.Name,
+                Surname = data.Surname,
+            });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateAuthor(int? id, AdminAuthorUpdateVM authorVM)
+        {
+            TempData["Response"] = "temp";
+            if (!ModelState.IsValid)
+            {
+                return View(authorVM);
+            }
+            var data = await _context.Authors.FindAsync(id);
+            if (data == null) return NotFound();
+            data.Name = authorVM.Name;
+            data.Surname = authorVM.Surname;
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "updated";
+            return RedirectToAction(nameof(Index));
+        }
+        //blog actions
+        public async Task<IActionResult> CreateBlog()
+        {
+            ViewBag.Authors = _context.Authors;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateBlog(AdminBlogCreateVM blogVM)
+        {
+            TempData["Response"] = "temp";
+            if (!await _context.Authors.AnyAsync(author=> author.Id == blogVM.AuthorId))
+            {
+                ModelState.AddModelError("AuthorId", "Author does not exist!");
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Authors = _context.Authors;
+                return View(blogVM);
+            }
+            Blog blog = new Blog
+            {
+                Title = blogVM.Title,
+                Description = blogVM.Description,
+                AuthorId = blogVM.AuthorId,
+            };
+            await _context.AddAsync(blog);
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "created";
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> DeleteBlog(int? id)
+        {
+            TempData["Response"] = "temp";
+            if (id == null) return BadRequest();
+            var data = await _context.Blogs.FindAsync(id);
+            if (data == null) return NotFound();
+            data.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "deleted";
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> UpdateBlog(int? id)
+        {
+            ViewBag.Authors = _context.Authors;
+            if (id == null) return BadRequest();
+            var data = await _context.Blogs.FindAsync(id);
+            if (data == null) return NotFound();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateBlog(int? id, AdminBlogUpdateVM blogVM)
+        {
+            TempData["Response"] = "temp";
+            var data = await _context.Blogs.FindAsync(id);
+            if (data == null) return NotFound();
+            if (!await _context.Authors.AnyAsync(author => author.Id == blogVM.AuthorId))
+            {
+                ModelState.AddModelError("AuthorId", "Author does not exist!");
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Authors = _context.Authors;
+                return View(blogVM);
+            }
+            data.Title = blogVM.Title;
+            data.Description = blogVM.Description;
+            data.AuthorId = blogVM.AuthorId;
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "updated";
+            return RedirectToAction(nameof(Index));
+        }
+        //product image actions
+        public async Task<IActionResult> CreateProductImage()
+        {
+            ViewBag.Products = _context.Products;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateProductImage(AdminProductImageCreateVM imageVM)
+        {
+            TempData["Response"] = "temp";
+            if (!await _context.Products.AnyAsync(product => product.Id == imageVM.ProductId))
+            {
+                ModelState.AddModelError("ProductId", "Product doesnt exist!");
+            }
+            if (!imageVM.ImageFile.IsImageType())
+            {
+                ModelState.AddModelError("ImageFile", "File must be an image!");
+            }
+            if (!imageVM.ImageFile.IsValidSize())
+            {
+                ModelState.AddModelError("ImageFile", "File is too big!");
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Products = _context.Products;
+                return View(imageVM);
+            }
+            ProductImage image = new ProductImage
+            {
+                ImagePath = await imageVM.ImageFile.SaveAsync(PathConstants.ProductImage),
+                ProductId = imageVM.ProductId,
+                IsActive = imageVM.IsActive,
+            };
+            await _context.ProductImages.AddAsync(image);
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "created";
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> DeleteProductImage(int? id)
+        {
+            TempData["Response"] = "temp";
+            if (id == null) return BadRequest();
+            var data = await _context.ProductImages.FindAsync(id);
+            if (data == null) return NotFound();
+            _context.ProductImages.Remove(data);
+            await _context.SaveChangesAsync();
+            TempData["Response"] = "deleted";
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> UpdateProductImage(int? id)
+        {
+            ViewBag.Products = _context.Products;
+            if (id == null) return BadRequest();
+            var data = await _context.ProductImages.FindAsync(id);
+            if (data == null) return NotFound();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductImage(int? id, AdminProductImageUpdateVM imageVM)
+        {
+            TempData["Response"] = "temp";
+            if (!await _context.Products.AnyAsync(product => product.Id == imageVM.ProductId))
+            {
+                ModelState.AddModelError("ProductId", "Product doesnt exist!");
+            }
+            if (!imageVM.ImageFile.IsImageType())
+            {
+                ModelState.AddModelError("ImageFile", "File must be an image!");
+            }
+            if (!imageVM.ImageFile.IsValidSize())
+            {
+                ModelState.AddModelError("ImageFile", "File is too big!");
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Products = _context.Products;
+                return View(imageVM);
+            }
+            var data = await _context.ProductImages.FindAsync(id);
+            if (data == null) return NotFound();
+            data.ImagePath = await imageVM.ImageFile.SaveAsync(PathConstants.ProductImage);
+            data.ProductId = imageVM.ProductId;
+            data.IsActive = imageVM.IsActive;
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";
             return RedirectToAction(nameof(Index));
