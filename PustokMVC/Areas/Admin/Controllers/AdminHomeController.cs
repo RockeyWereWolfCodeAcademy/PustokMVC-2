@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PustokMVC.Areas.Admin.ViewModels;
+using PustokMVC.Areas.Admin.ViewModels.AdminBlogVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminHomeVM;
+using PustokMVC.Areas.Admin.ViewModels.AdminProductImageVM;
+using PustokMVC.Areas.Admin.ViewModels.AdminProductVM;
 using PustokMVC.Contexts;
 using PustokMVC.Models;
+using PustokMVC.ViewModels.AuthorVM;
 using PustokMVC.ViewModels.CategoryVM;
 using PustokMVC.ViewModels.ProductVM;
 using PustokMVC.ViewModels.SliderVM;
@@ -54,6 +57,26 @@ namespace PustokMVC.Areas.Admin.Controllers
                 Name = category.Name,
                 IsDeleted = category.IsDeleted,
                 ParentCategoryId = category.ParentCategoryId,
+            }).ToListAsync();
+            models.Authors = await _context.Authors.Select(author => new AdminAuthorListVM
+            {
+                Id = author.Id,
+                Name = author.Name,
+                Surname = author.Surname,
+            }).ToListAsync();
+            models.Blogs = await  _context.Blogs.Select(blog => new AdminBlogListVM
+            {
+                Id = blog.Id,
+                Title = blog.Title,
+                Author = blog.Author,
+                IsDeleted = blog.IsDeleted,
+            }).ToListAsync();
+            models.ProductImages = await _context.ProductImages.Select(image => new AdminProductImageListVM
+            {
+                Id = image.Id,
+                ImagePath = image.ImagePath,
+                IsActive = image.IsActive,
+                Product = image.Product,
             }).ToListAsync();
             return View(models);
         }

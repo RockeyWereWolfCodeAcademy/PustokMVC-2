@@ -1,7 +1,7 @@
 ﻿using PustokMVC.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace PustokMVC.Areas.Admin.ViewModels
+namespace PustokMVC.Areas.Admin.ViewModels.AdminProductVM
 {
     public class AdminProductListVM
     {

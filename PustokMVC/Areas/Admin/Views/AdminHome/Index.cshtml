@@ -224,6 +224,152 @@
     </div>
 </div>
 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="mb-0">
+            <a data-toggle="collapse" href="#AuthorsCollapse" aria-expanded="true" aria-controls="AuthorsCollapse">
+                <p class="m-0 font-weight-bold text-primary">Authors</p>
+            </a>
+        </h6>
+    </div>
+    <div class="collapse multi-collapse" id="AuthorsCollapse">
+        <div class="card-body">
+            <a class="btn btn-outline-success" asp-action="CreateAuthor">Create</a>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th colspan="2" style="text-align: center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Authors.Count() != 0)
+                        {
+                            @foreach (var author in Model.Authors)
+                            {
+                                <tr>
+                                    <td>@author.Id</td>
+                                    <td>@author.Name</td>
+                                    <td>@author.Surname</td>
+                                    <td><a class="btn btn-outline-info" asp-action="UpdateAuthor" asp-route-id="@author.Id">Update</a></td>
+                                    <td><a class="btn btn-outline-danger" asp-action="DeleteAuthor" asp-route-id="@author.Id">Delete</a></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr align="center">
+                                <td colspan="4">NO DATA</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="mb-0">
+            <a data-toggle="collapse" href="#BlogsCollapse" aria-expanded="true" aria-controls="BlogsCollapse">
+                <p class="m-0 font-weight-bold text-primary">Blogs</p>
+            </a>
+        </h6>
+    </div>
+    <div class="collapse multi-collapse" id="BlogsCollapse">
+        <div class="card-body">
+            <a class="btn btn-outline-success" asp-action="CreateBlog">Create</a>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th colspan="2" style="text-align: center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Blogs.Count() != 0)
+                        {
+                            @foreach (var blog in Model.Blogs)
+                            {
+                                <tr class='@(blog.IsDeleted ? "bg-danger text-white" : "")'>
+                                    <td>@blog.Id</td>
+                                    <td>@blog.Title</td>
+                                    <td>@(blog.Author.Name + blog.Author.Surname)</td>
+                                    <td><a class="btn btn-outline-info" asp-action="UpdateBlog" asp-route-id="@blog.Id">Update</a></td>
+                                    <td><a class="btn btn-outline-danger" asp-action="DeleteBlog" asp-route-id="@blog.Id">Delete</a></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr align="center">
+                                <td colspan="4">NO DATA</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="mb-0">
+            <a data-toggle="collapse" href="#ProductImagesCollapse" aria-expanded="true" aria-controls="ProductImagesCollapse">
+                <p class="m-0 font-weight-bold text-primary">Product Images</p>
+            </a>
+        </h6>
+    </div>
+    <div class="collapse multi-collapse" id="ProductImagesCollapse">
+        <div class="card-body">
+            <a class="btn btn-outline-success" asp-action="CreateProductImage">Create</a>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Active</th>
+                            <th colspan="2" style="text-align: center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Authors.Count() != 0)
+                        {
+                            @foreach (var image in Model.ProductImages)
+                            {
+                                <tr>
+                                    <td>@image.Id</td>
+                                    <td><img src="@image.ImagePath" width="250px" height="250px"></td>
+                                    <td>@image.Product.Name</td>
+                                    <td>@(image.IsActive == true ? "Yes" : "No")</td>
+                                    <td><a class="btn btn-outline-info" asp-action="UpdateProductImage" asp-route-id="@image.Id">Update</a></td>
+                                    <td><a class="btn btn-outline-danger" asp-action="DeleteProductImage" asp-route-id="@image.Id">Delete</a></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr align="center">
+                                <td colspan="5">NO DATA</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
