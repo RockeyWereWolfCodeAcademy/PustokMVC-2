@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Create Product";
 }
-@model ProductCreateVM
+@model ProductUpdateVM
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -81,7 +81,7 @@
             </select>
             <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
             </div> *@
-            <button class="btn btn-success">Create</button>
+            <button class="btn btn-success">Update</button>
         </form>
     </div>
 </div>

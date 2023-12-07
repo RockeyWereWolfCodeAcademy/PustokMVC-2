@@ -501,7 +501,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("ImageFile", "File must be an image!");
             }
-            if (!imageVM.ImageFile.IsValidSize())
+            if (!imageVM.ImageFile.IsValidSize(1000))
             {
                 ModelState.AddModelError("ImageFile", "File is too big!");
             }
@@ -548,13 +548,16 @@ namespace PustokMVC.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("ProductId", "Product doesnt exist!");
             }
-            if (!imageVM.ImageFile.IsImageType())
+            if (imageVM.ImageFile != null)
             {
-                ModelState.AddModelError("ImageFile", "File must be an image!");
-            }
-            if (!imageVM.ImageFile.IsValidSize())
-            {
-                ModelState.AddModelError("ImageFile", "File is too big!");
+                if (!imageVM.ImageFile.IsImageType())
+                {
+                    ModelState.AddModelError("ImageFile", "File must be an image!");
+                }
+                if (!imageVM.ImageFile.IsValidSize(1000))
+                {
+                    ModelState.AddModelError("ImageFile", "File is too big!");
+                }
             }
             if (!ModelState.IsValid)
             {
@@ -563,7 +566,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             }
             var data = await _context.ProductImages.FindAsync(id);
             if (data == null) return NotFound();
-            data.ImagePath = await imageVM.ImageFile.SaveAsync(PathConstants.ProductImage);
+            data.ImagePath = imageVM.ImageFile == null ? data.ImagePath : await imageVM.ImageFile.SaveAsync(PathConstants.ProductImage);
             data.ProductId = imageVM.ProductId;
             data.IsActive = imageVM.IsActive;
             await _context.SaveChangesAsync();
