@@ -11,7 +11,7 @@ namespace PustokMVC.Models
         [MaxLength(256)]
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public int AuthorId { get; set; }
         public Author Author { get; set; }
         public bool IsDeleted { get; set; }

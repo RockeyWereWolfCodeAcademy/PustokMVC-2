@@ -1,6 +1,4 @@
-﻿using PustokMVC.Models;
-
-namespace PustokMVC.Areas.Admin.ViewModels.AdminProductImageVM
+﻿namespace PustokMVC.Areas.Admin.ViewModels.AdminProductImageVM
 {
     public class AdminProductImageCreateVM
     {

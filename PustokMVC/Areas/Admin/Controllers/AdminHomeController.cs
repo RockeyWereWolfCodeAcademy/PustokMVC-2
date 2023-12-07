@@ -72,6 +72,8 @@ namespace PustokMVC.Areas.Admin.Controllers
                 Id = blog.Id,
                 Title = blog.Title,
                 Author = blog.Author,
+                CreatedAt = blog.CreatedAt,
+                UpdatedAt = blog.UpdatedAt,
                 IsDeleted = blog.IsDeleted,
             }).ToListAsync();
             models.ProductImages = await _context.ProductImages.Select(image => new AdminProductImageListVM
@@ -237,10 +239,14 @@ namespace PustokMVC.Areas.Admin.Controllers
             if (productVM.ActualPrice > productVM.SellPrice)
             {
                 ModelState.AddModelError("ActualPrice", "Sell price must be bigger than cost price");
+                ViewBag.Categories = _context.Categories;
+                return View(productVM);
             }
             if (!await _context.Categories.AnyAsync(c => c.Id == productVM.CategoryId))
             {
                 ModelState.AddModelError("CategoryId", "Category doesnt exist");
+                ViewBag.Categories = _context.Categories;
+                return View(productVM);
             }
             if (!ModelState.IsValid)
             {
@@ -253,14 +259,13 @@ namespace PustokMVC.Areas.Admin.Controllers
                 ExTax = productVM.ExTax,
                 Brand = productVM.Brand,
                 RewardPoints = productVM.RewardPoints,
-                IsAvailable = productVM.IsAvailable,
                 ActualPrice = productVM.ActualPrice,
                 SellPrice = productVM.SellPrice,
                 Discount = productVM.Discount,
                 About = productVM.About,
                 Description = productVM.Description,
                 Quantity = productVM.Quantity,
-                Images = productVM.Images,
+                IsAvailable = productVM.IsAvailable,
                 CategoryId = productVM.CategoryId,
             };
             await _context.Products.AddAsync(product);
@@ -473,6 +478,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             data.Title = blogVM.Title;
             data.Description = blogVM.Description;
             data.AuthorId = blogVM.AuthorId;
+            data.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";
             return RedirectToAction(nameof(Index));

@@ -21,7 +21,7 @@ namespace PustokMVC.Models
         [MaxLength(256)]
         public string Description { get; set; }
         public uint Quantity { get; set; }
-        public List<ProductImage> Images { get; set; }
+        public List<ProductImage>? Images { get; set; }
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
         public bool IsDeleted { get; set; } = false;

@@ -290,6 +290,8 @@
                             <th>Id</th>
                             <th>Title</th>
                             <th>Author</th>
+                            <th>Creation Time</th>
+                            <th>Last Update</th>
                             <th colspan="2" style="text-align: center">Action</th>
                         </tr>
                     </thead>
@@ -301,7 +303,9 @@
                                 <tr class='@(blog.IsDeleted ? "bg-danger text-white" : "")'>
                                     <td>@blog.Id</td>
                                     <td>@blog.Title</td>
-                                    <td>@(blog.Author.Name + blog.Author.Surname)</td>
+                                    <td>@(blog.Author.Name +" "+ blog.Author.Surname)</td>
+                                    <td>@blog.CreatedAt</td>
+                                    <td>@blog.UpdatedAt</td>
                                     <td><a class="btn btn-outline-info" asp-action="UpdateBlog" asp-route-id="@blog.Id">Update</a></td>
                                     <td><a class="btn btn-outline-danger" asp-action="DeleteBlog" asp-route-id="@blog.Id">Delete</a></td>
                                 </tr>
