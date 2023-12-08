@@ -28,6 +28,13 @@
                 </select>
                 <span asp-validation-for="AuthorId" class="text-danger"></span>
             </div>
+            <div>
+                <label asp-for="TagIds">Tags</label>
+                <select class="form-control" asp-for="TagIds" asp-items='@new SelectList(ViewBag.Tags,"Id", "Title")'>
+                    <option disabled selected>Select Tags</option>
+                </select>
+                <span asp-validation-for="TagIds" class="text-danger"></span>
+            </div>
             <button class="btn btn-success">Update</button>
         </form>
     </div>

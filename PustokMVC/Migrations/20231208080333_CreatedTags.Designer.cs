@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PustokMVC.Contexts;
 
@@ -11,9 +12,10 @@ using PustokMVC.Contexts;
 namespace PustokMVC.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231208080333_CreatedTags")]
+    partial class CreatedTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,7 +103,7 @@ namespace PustokMVC.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("BlogsTags");
+                    b.ToTable("BlogTag");
                 });
 
             modelBuilder.Entity("PustokMVC.Models.Category", b =>
@@ -269,7 +271,7 @@ namespace PustokMVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tag");
                 });
 
             modelBuilder.Entity("PustokMVC.Models.Blog", b =>

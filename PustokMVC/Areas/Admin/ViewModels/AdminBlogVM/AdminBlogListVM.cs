@@ -10,5 +10,6 @@ namespace PustokMVC.Areas.Admin.ViewModels.AdminBlogVM
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set;}
+        public IEnumerable<string> Tags { get; set; }
     }
 }

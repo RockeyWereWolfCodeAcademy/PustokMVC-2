@@ -24,7 +24,6 @@ namespace PustokMVC.ViewModels.ProductVM
         public string Description { get; set; }
         [Required]
         public uint Quantity { get; set; }
-        public List<ProductImage> Images { get; set; }
         [Required]
         public int CategoryId { get; set; }
     }

@@ -6,6 +6,7 @@ using PustokMVC.Areas.Admin.ViewModels.AdminBlogVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminHomeVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminProductImageVM;
 using PustokMVC.Areas.Admin.ViewModels.AdminProductVM;
+using PustokMVC.Areas.Admin.ViewModels.AdminTagVM;
 using PustokMVC.Contexts;
 using PustokMVC.Helpers;
 using PustokMVC.Models;
@@ -74,6 +75,7 @@ namespace PustokMVC.Areas.Admin.Controllers
                 Author = blog.Author,
                 CreatedAt = blog.CreatedAt,
                 UpdatedAt = blog.UpdatedAt,
+                Tags = blog.BlogTags.Select(bt => bt.Tag.Title).ToList(),
                 IsDeleted = blog.IsDeleted,
             }).ToListAsync();
             models.ProductImages = await _context.ProductImages.Select(image => new AdminProductImageListVM
@@ -82,6 +84,11 @@ namespace PustokMVC.Areas.Admin.Controllers
                 ImagePath = image.ImagePath,
                 IsActive = image.IsActive,
                 Product = image.Product,
+            }).ToListAsync();
+            models.Tags = await _context.Tags.Select(tag => new AdminTagListVM
+            {
+                Id = tag.Id,
+                Title = tag.Title,
             }).ToListAsync();
             return View(models);
         }
@@ -305,7 +312,6 @@ namespace PustokMVC.Areas.Admin.Controllers
                 About = data.About,
                 Description = data.Description,
                 Quantity = data.Quantity,
-                Images = data.Images,
                 CategoryId = data.CategoryId,
             });
         }
@@ -343,7 +349,6 @@ namespace PustokMVC.Areas.Admin.Controllers
             data.About = productVM.About;
             data.Description = productVM.Description;
             data.Quantity = productVM.Quantity;
-            data.Images = productVM.Images;
             data.CategoryId = productVM.CategoryId;
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";
@@ -415,6 +420,7 @@ namespace PustokMVC.Areas.Admin.Controllers
         public async Task<IActionResult> CreateBlog()
         {
             ViewBag.Authors = _context.Authors;
+            ViewBag.Tags = _context.Tags;
             return View();
         }
         [HttpPost]
@@ -428,6 +434,7 @@ namespace PustokMVC.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Authors = _context.Authors;
+                ViewBag.Tags = _context.Tags;
                 return View(blogVM);
             }
             Blog blog = new Blog
@@ -435,6 +442,10 @@ namespace PustokMVC.Areas.Admin.Controllers
                 Title = blogVM.Title,
                 Description = blogVM.Description,
                 AuthorId = blogVM.AuthorId,
+                BlogTags = blogVM.TagIds?.Select(id=> new BlogTag
+                {
+                    TagId = id,
+                }).ToList(),
             };
             await _context.AddAsync(blog);
             await _context.SaveChangesAsync();
@@ -455,10 +466,17 @@ namespace PustokMVC.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateBlog(int? id)
         {
             ViewBag.Authors = _context.Authors;
+            ViewBag.Tags = _context.Tags;
             if (id == null) return BadRequest();
             var data = await _context.Blogs.FindAsync(id);
             if (data == null) return NotFound();
-            return View();
+            return View( new AdminBlogUpdateVM
+            {
+                Title = data.Title,
+                Description = data.Description,
+                AuthorId = data.AuthorId,
+                //TagIds = data.BlogTags?.Select(b => b.TagId).ToList(),
+            });
         }
         [HttpPost]
         public async Task<IActionResult> UpdateBlog(int? id, AdminBlogUpdateVM blogVM)
@@ -478,6 +496,10 @@ namespace PustokMVC.Areas.Admin.Controllers
             data.Title = blogVM.Title;
             data.Description = blogVM.Description;
             data.AuthorId = blogVM.AuthorId;
+            data.BlogTags = blogVM.TagIds?.Select(id => new BlogTag
+            {
+                TagId = id,
+            }).ToList();
             data.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";
@@ -538,7 +560,11 @@ namespace PustokMVC.Areas.Admin.Controllers
             if (id == null) return BadRequest();
             var data = await _context.ProductImages.FindAsync(id);
             if (data == null) return NotFound();
-            return View();
+            return View(new AdminProductImageUpdateVM
+            {
+                ProductId = data.ProductId,
+                IsActive = data.IsActive,
+            });
         }
         [HttpPost]
         public async Task<IActionResult> UpdateProductImage(int? id, AdminProductImageUpdateVM imageVM)
@@ -572,6 +598,12 @@ namespace PustokMVC.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             TempData["Response"] = "updated";
             return RedirectToAction(nameof(Index));
+        }
+        //tag actions
+        public async Task<IActionResult> CreateTag()
+        {
+            ViewBag.Products = _context.Products;
+            return View();
         }
     }
 }
